@@ -1,0 +1,21 @@
+function init(self)
+	self.alive = true
+end
+
+local green = vmath.vector3(0.5, 1, 0.5)
+local yellow = vmath.vector3(0.85, 0.75, 0.25)
+local red    = vmath.vector3(1, 0.5, 0.5)
+
+function on_message(self, message_id, message, sender)
+	if not self.alive then
+--		return
+	end
+	if message_id == hash "suspicion" then
+		gui.set_color(gui.get_node "box", yellow)
+	elseif message_id == hash "calm_down" then
+		gui.set_color(gui.get_node "box", green)
+	elseif message_id == hash "game_over" then
+		gui.set_color(gui.get_node "box", red)
+		self.alive = false
+	end
+end

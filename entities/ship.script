@@ -1,0 +1,63 @@
+
+go.property("origin", vmath.vector3())
+go.property("destination", vmath.vector3())
+
+go.property("speed", 1)
+
+function check_collisions()
+	local min_distance = math.huge
+	local position = go.get_world_position()
+	local tile_position = position * (1/16)
+	tile_position.x = tile_position.x + 1
+	tile_position.y = tile_position.y + 1
+	local min_x, max_x = math.floor(tile_position.x) - 2, math.ceil(tile_position.x) + 3
+	local min_y, max_y = math.floor(tile_position.y) - 2, math.ceil(tile_position.y) + 3
+	for x = min_x, max_x do
+		for y = min_y, max_y do
+--			tilemap.set_tile("game:/universe#grid", "layer1", x, y, 1)
+			local tile = vmath.vector3(x - 0.5, y - 0.5, 0) * 16
+			local distance = vmath.length(position - tile)
+			if distance < min_distance
+			and tilemap.get_tile("game:/universe#grid", "layer1", x, y) == 2 then
+				min_distance = distance
+			end
+		end
+	end
+	print (min_distance)
+	return min_distance
+end
+
+function init(self)
+	local distance = vmath.length(self.destination - self.origin)
+	local duration = distance / self.speed
+
+	go.set_position(self.origin)
+	go.animate(".", "position",
+		go.PLAYBACK_ONCE_FORWARD, self.destination,
+		go.EASING_LINEAR, duration, 0,
+		function() go.delete() end)
+
+	-- TODO: Add trajectory
+
+	timer.delay(1/5, true,
+	function(self)
+		local distance = check_collisions()
+		if distance <= 12 then
+			msg.post("game:/manager", "game_over")
+		elseif distance <= 24 then
+			msg.post("game:/manager", "suspicion")
+		else
+			msg.post("game:/manager", "calm_down")
+		end
+	end)
+end
+
+function update(self, dt)
+	
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash "trigger_response" then
+		msg.post("game:/manager", "game_over")
+	end
+end
