@@ -54,16 +54,19 @@ local function send_impulse(self, destination)
 		function() go.delete(impulse); self.impulses[impulse] = nil end)
 
 		go.set_rotation(vmath.quat_rotation_z(rotation), impulse)
---		msg.post(impulse, "set_parent", { parent_id = go.get_id() })
 	end)
 end
 
+function final(self)
+	assert_tracer(self)
+end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash "trigger_response" then
 		print(message_id, message.own_group)
 		if message.own_group == hash "ship" then
 			msg.post("game:/manager", "game_over")
+			go.delete(nil, true)
 		elseif message.own_group == hash "radar" then
 			msg.post("game:/manager", "suspicion")
 		end
