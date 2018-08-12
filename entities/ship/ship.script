@@ -5,22 +5,59 @@ local path_segment_count = 60
 go.property("speed", 10)
 go.property("last_stop", vmath.vector3())
 
+local function assert_tracer(self)
+	if not self.tracer then return end
+
+	timer.cancel(self.tracer)
+
+	for impulse in pairs(self.impulses) do
+		go.delete(impulse)
+	end
+end
 
 local function animate(self)
 	local p = table.remove(self.points, 1)
 	if not p then
+		finish_flight(self)
 		return
 	end
 	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, p, go.EASING_LINEAR, self.dt, 0, animate)
 end
 
 local function finish_flight(self)
+	assert_tracer(self)
+
 	print(go.EASING_INOUTBOUNCE)
 	msg.post("game:/manager", "flight_done")
 	if self.last_flight then
 		go.delete(".", true)
 	end
 end
+
+
+local function send_impulse(self, destination)
+	assert_tracer(self)
+
+	self.impulses = {}
+
+	local origin = go.get_world_position()
+	local direction = destination - origin
+	local distance = vmath.length(direction)
+	local duration = distance / self.speed / 6
+	local rotation = -math.atan2(direction.x, direction.y)
+
+	self.tracer = timer.delay(0.25, true,
+	function()
+		local impulse = factory.create("game:/manager#impulse_factory", origin)
+		self.impulses[impulse] = true
+		go.animate(impulse, "position", go.PLAYBACK_ONCE_FORWARD, destination, go.EASING_LINEAR, duration, 0,
+		function() go.delete(impulse); self.impulses[impulse] = nil end)
+
+		go.set_rotation(vmath.quat_rotation_z(rotation), impulse)
+--		msg.post(impulse, "set_parent", { parent_id = go.get_id() })
+	end)
+end
+
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash "trigger_response" then
@@ -36,6 +73,8 @@ function on_message(self, message_id, message, sender)
 		local duration = distance / self.speed
 		self.last_flight = message.last_flight
 		self.last_stop = go.get_world_position()
+
+		send_impulse(self, message.destination)
 
 --		if message.cps then
 --			self.points = bezier.create(message.cps, path_segment_count)
