@@ -1,0 +1,5 @@
+local global = require "global"
+
+function init(self)
+	table.insert(global.planets, go.get_id())
+end

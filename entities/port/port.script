@@ -1,0 +1,55 @@
+local global = require "global"
+
+local function calc_sin_cps(from, to)
+	local mid = vmath.vector3((from.x + to.x)/2, (from.y + to.y)/2, 0)
+	local mid1 = vmath.vector3((from.x + mid.x)/2, (from.y + mid.y)/2, 0)
+	local mid2 = vmath.vector3((to.x + mid.x)/2, (to.y + mid.y)/2, 0)
+
+	local dist1 = (to - from) * 0.25 
+
+	local perp = vmath.vector3(dist1.y, -dist1.x, 0)
+
+--	local perp = vmath.cross(
+--		vmath.normalize(direction),
+--		vmath.vector3(0, 0, 1))
+
+	return {
+		from,
+		mid1 + perp,
+		mid,
+		mid2 - perp,
+		to
+	}
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash "spawn_ship" then
+		assert(#global.planets > 0)
+
+		-- Creating new ship
+		local ship_id = collectionfactory.create("#factory")
+
+		-- Attaching radar to its ship
+		local radar_url = msg.url(ship_id[hash "/radar"])
+		radar_url.fragment = "script"
+		go.set(radar_url, "ship", ship_id[hash "/ship"])
+
+		-- Dispatching ship
+		local planet_id = math.random(#global.planets)
+		local planet = global.planets[planet_id]
+		local cps = nil
+--		local cps = calc_sin_cps(go.get_world_position(ship_id[hash "/ship"]), go.get_world_position(planet))
+		msg.post(ship_id[hash "/ship"], "redirect_ship", { destination = go.get_world_position(planet), cps = cps })
+		
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash "spawn_ship" and action.pressed then
+		msg.post("#", "spawn_ship")
+	end
+end

@@ -1,0 +1,51 @@
+local bezier = require "m.bezier"
+
+local path_segment_count = 60
+
+go.property("speed", 10)
+go.property("last_stop", vmath.vector3())
+
+
+local function animate(self)
+	local p = table.remove(self.points, 1)
+	if not p then
+		return
+	end
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, p, go.EASING_LINEAR, self.dt, 0, animate)
+end
+
+local function finish_flight(self)
+	print(go.EASING_INOUTBOUNCE)
+	msg.post("game:/manager", "flight_done")
+	if self.last_flight then
+		go.delete(".", true)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash "trigger_response" then
+		print(message_id, message.own_group)
+		if message.own_group == hash "ship" then
+			msg.post("game:/manager", "game_over")
+		elseif message.own_group == hash "radar" then
+			msg.post("game:/manager", "suspicion")
+		end
+
+	elseif message_id == hash "redirect_ship" then
+		local distance = vmath.length(message.destination - go.get_world_position())
+		local duration = distance / self.speed
+		self.last_flight = message.last_flight
+		self.last_stop = go.get_world_position()
+
+--		if message.cps then
+--			self.points = bezier.create(message.cps, path_segment_count)
+--			pprint(self.points)
+--			self.dt = duration / path_segment_count
+--			go.set_position(message.cps[1])
+--			animate(self)
+--		else
+			go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, message.destination, go.EASING_LINEAR, duration, 0, finish_flight)
+--		end
+
+	end
+end

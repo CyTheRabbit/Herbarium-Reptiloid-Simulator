@@ -1,0 +1,6 @@
+images {
+  image: "/assets/red_planet.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0
