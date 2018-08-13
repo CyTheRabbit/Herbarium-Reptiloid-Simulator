@@ -1,0 +1,14 @@
+local flow = require "m.flow"
+
+local function session()
+	flow.delay(5)
+	go.animate("#hint", "color.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_OUTCUBIC, 5)
+end
+
+function init(self)
+	self.flow = flow(session)
+end
+
+function final(self)
+	flow.stop(self.flow)
+end

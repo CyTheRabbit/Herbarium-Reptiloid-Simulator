@@ -7,12 +7,7 @@ collision: "/assets/bordered_void.png"
 material_tag: "tile"
 convex_hulls {
   index: 0
-  count: 4
-  collision_group: "void"
-}
-convex_hulls {
-  index: 4
-  count: 4
+  count: 8
   collision_group: "void"
 }
 convex_hulls {
@@ -37,53 +32,78 @@ convex_hulls {
 }
 convex_hulls {
   index: 24
+  count: 3
+  collision_group: "void"
+}
+convex_hulls {
+  index: 27
   count: 4
   collision_group: "void"
 }
 convex_hulls {
-  index: 28
+  index: 31
+  count: 3
+  collision_group: "void"
+}
+convex_hulls {
+  index: 34
   count: 4
   collision_group: "void"
 }
 convex_hulls {
-  index: 32
+  index: 38
   count: 4
   collision_group: "void"
 }
 convex_hulls {
-  index: 36
+  index: 42
   count: 4
   collision_group: "void"
 }
 convex_hulls {
-  index: 40
+  index: 46
   count: 4
   collision_group: "void"
 }
 convex_hulls {
-  index: 44
+  index: 50
   count: 4
   collision_group: "void"
 }
 convex_hulls {
-  index: 48
+  index: 54
+  count: 3
+  collision_group: "void"
+}
+convex_hulls {
+  index: 57
   count: 4
   collision_group: "void"
 }
 convex_hulls {
-  index: 52
-  count: 4
+  index: 61
+  count: 3
   collision_group: "void"
 }
 convex_hulls {
-  index: 56
-  count: 4
-  collision_group: "void"
+  index: 64
+  count: 8
+  collision_group: ""
 }
 convex_hulls {
-  index: 60
+  index: 72
   count: 4
-  collision_group: "void"
+  collision_group: ""
+}
+convex_hulls {
+  index: 76
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 76
+  count: 0
+  collision_group: ""
 }
 collision_groups: "void"
 extrude_borders: 0

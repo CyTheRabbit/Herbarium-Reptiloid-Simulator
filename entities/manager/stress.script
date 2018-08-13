@@ -1,0 +1,51 @@
+local global = require "global"
+local monarch = require "monarch.monarch"
+
+function init(self)
+	self.visible_stress = global.stress
+	self.visual_timer = nil
+end
+
+local function reduce_timer(self, handle)
+	if global.stress == self.visible_stress then
+		timer.cancel(handle)
+		self.visual_timer = nil
+		return
+	end
+	local step = global.stress > self.visible_stress and 1 or -1
+
+	self.visible_stress = self.visible_stress + step
+
+	local stress = math.min(10, math.max(self.visible_stress, 0))
+
+	msg.post("game:/manager#stress_bar", "play_animation", { id = hash("stress_" .. stress)})
+end
+
+local function gameover_timer(self)
+	if not self.timer then
+		self.timer = timer.delay(0.75, false,
+		function()
+			monarch.show(hash "gameover")
+		end)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash "mission_done" then
+		if go.get(sender, "alert") == false then
+			global.stress = global.stress - 1
+		end
+	elseif message_id == hash "hit" then
+		global.stress = global.stress + 3
+	end
+
+	global.stress = math.max(1, math.min(10, global.stress))
+
+	if global.stress > 9 then
+		gameover_timer(self)
+	end
+
+	if not self.visual_timer then
+		self.visual_timer = timer.delay(0.125, true, reduce_timer)
+	end
+end

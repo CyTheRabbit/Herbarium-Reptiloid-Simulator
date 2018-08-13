@@ -31,7 +31,14 @@ function on_message(self, message_id, message, sender)
 		assert(#global.planets > 0)
 
 		-- Creating new ship
-		local ship_id = collectionfactory.create("#factory")
+		if not message.destination then
+			local planet_id = math.random(#global.planets)
+			local planet = global.planets[planet_id]
+			message.destination = go.get_world_position(planet)
+		end
+		local ship_props = message.properties or global.ship_properties
+		local props = { [hash "/ship"] = ship_props }
+		local ship_id = collectionfactory.create("#factory", nil, nil, props)
 
 		-- Attaching radar to its ship
 		local radar_url = msg.url(ship_id[hash "/radar"])
@@ -39,12 +46,8 @@ function on_message(self, message_id, message, sender)
 		go.set(radar_url, "ship", ship_id[hash "/ship"])
 
 		-- Dispatching ship
-		local planet_id = math.random(#global.planets)
-		local planet = global.planets[planet_id]
-		local cps = nil
---		local cps = calc_sin_cps(go.get_world_position(ship_id[hash "/ship"]), go.get_world_position(planet))
-		msg.post(ship_id[hash "/ship"], "redirect_ship", { destination = go.get_world_position(planet), cps = cps })
-		
+		msg.post(ship_id[hash "/ship"], "redirect_ship", { destination = message.destination, cps = cps })
+
 	end
 end
 

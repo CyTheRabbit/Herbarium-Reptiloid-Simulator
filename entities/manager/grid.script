@@ -1,12 +1,13 @@
 local moku = require "moku.moku"
 local global = require "global"
 
-go.property("tilemap", msg.url"game:/universe#grid")
-go.property("layer", hash"layer1")
+go.property("tilemap", msg.url"")
+go.property("layer", hash"")
 
 local moku_ids = {
 	SPACE = 0,
-	VOID  = 1
+	VOID  = 1,
+	RESERVED = 17,
 }
 
 local function on_new_cell(args)

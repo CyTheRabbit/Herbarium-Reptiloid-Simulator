@@ -1,0 +1,16 @@
+local monarch = require "monarch.monarch"
+
+function init(self)
+	msg.post("loader:/game#collectionproxy", "set_time_step", {factor = 0, mode = 1})
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+--	msg.post("loader:/game#collectionproxy", "set_time_step", {factor = 1, mode = 1})
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash "pause" and action.pressed then
+		monarch.back()
+	end
+end

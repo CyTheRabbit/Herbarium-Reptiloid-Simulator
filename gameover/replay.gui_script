@@ -1,0 +1,20 @@
+local monarch = require "monarch.monarch"
+
+local function splash_hint(self)
+	local color = gui.get_color(self.hint)
+	color.w = 1 - color.w
+	gui.set_color(self.hint, color)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	self.hint = gui.get_node "hint"
+	timer.delay(1, true, splash_hint)
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash "replay" then
+		monarch.show(hash "game", { clear = true, reload = true })
+	end
+end

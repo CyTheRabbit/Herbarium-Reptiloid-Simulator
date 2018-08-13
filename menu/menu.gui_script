@@ -1,0 +1,38 @@
+local monarch = require "monarch.monarch"
+
+function init(self)
+	self.buttons = {
+		new_game = {
+			node = gui.get_node "new_game",
+			action = function() monarch.show(hash "game") end
+		},
+		tutorial = {
+			node = gui.get_node "tutorial",
+			action = function() monarch.show(hash "game", nil, { tutorial = true }) end
+		},
+		quit = {
+			node = gui.get_node "quit",
+			action = function() msg.post("@system:", "exit", { code = 0 }) end
+		}
+	}
+
+	sound.play "loader:/sound#menu_music"
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+	sound.stop "loader:/sound#menu_music"
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash "click" and action.pressed then
+		sound.play "loader:/sound#click"
+	elseif action_id == hash "click" and action.released then
+		print(action_id)
+		for _, button in pairs(self.buttons) do
+			if gui.pick_node(button.node, action.x, action.y) then
+				button.action(self)
+			end
+		end
+	end
+end

@@ -1,0 +1,21 @@
+images {
+  image: "/assets/gui/colba_svetliy_fon.png"
+}
+images {
+  image: "/assets/gui/space_for_colba.png"
+}
+images {
+  image: "/assets/gui/left.png"
+}
+images {
+  image: "/assets/gui/kek3.png"
+}
+images {
+  image: "/assets/gui/Menu_pauses.png"
+}
+images {
+  image: "/assets/gui/Dialog_window.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

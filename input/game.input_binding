@@ -2,11 +2,27 @@ key_trigger {
   input: KEY_SPACE
   action: "spawn_ship"
 }
+key_trigger {
+  input: KEY_ESC
+  action: "pause"
+}
+key_trigger {
+  input: KEY_SPACE
+  action: "replay"
+}
+key_trigger {
+  input: KEY_SPACE
+  action: "next"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
-  action: "click"
+  action: "space"
 }
 mouse_trigger {
   input: MOUSE_BUTTON_RIGHT
-  action: "space"
+  action: "void"
+}
+mouse_trigger {
+  input: MOUSE_BUTTON_LEFT
+  action: "click"
 }
