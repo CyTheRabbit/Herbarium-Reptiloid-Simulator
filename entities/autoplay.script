@@ -102,6 +102,8 @@ local function session()
 end
 
 function init(self)
+	self.timers = {}
+
 	global.stress = 0
 	global.space = 0
 
