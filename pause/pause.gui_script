@@ -12,5 +12,7 @@ end
 function on_input(self, action_id, action)
 	if action_id == hash "pause" and action.pressed then
 		monarch.back()
+	elseif action_id == hash "next" and action.pressed then
+		monarch.show(hash "menu", { clear = true, reload = true })
 	end
 end

@@ -22,10 +22,6 @@ local function calc_sin_cps(from, to)
 	}
 end
 
-function init(self)
-	msg.post(".", "acquire_input_focus")
-end
-
 function on_message(self, message_id, message, sender)
 	if message_id == hash "spawn_ship" then
 		assert(#global.planets > 0)
@@ -48,11 +44,5 @@ function on_message(self, message_id, message, sender)
 		-- Dispatching ship
 		msg.post(ship_id[hash "/ship"], "redirect_ship", { destination = message.destination, cps = cps })
 
-	end
-end
-
-function on_input(self, action_id, action)
-	if action_id == hash "spawn_ship" and action.pressed then
-		msg.post("#", "spawn_ship")
 	end
 end

@@ -1,8 +1,8 @@
 local moku = require "moku.moku"
 local global = require "global"
 
-go.property("tilemap", msg.url"")
-go.property("layer", hash"")
+go.property("tilemap", msg.url())
+go.property("layer", hash(""))
 
 local moku_ids = {
 	SPACE = 0,

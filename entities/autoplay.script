@@ -118,7 +118,7 @@ local function session(self)
 		wait.delay(0.0625)
 	end
 
-	wave(self, planet_pool, { speed = 15 }, 8, 10)
+	wave(self, planet_pool, { speed = 30 }, 8, 8)
 
 	say(
 	"Когда эти людишки наконец угомонятся?",
@@ -135,23 +135,25 @@ local function session(self)
 		wait.delay(0.0625)
 	end
 
-	wave(self, planet_pool, { speed = 15 }, 8, 10)
+	wave(self, planet_pool, { speed = 30 }, 8, 8)
 
 	monarch.show(hash "gameover", nil, { win = true })
 
 end
 
 function init(self)
+	sound.play "loader:/sound#space"
 	self.timers = {}
 
 	global.stress = 0
 	global.space = 0
 
 	global.ship_properties.speed = 15
-	self.flow = flow.start(session)
+	self.flow = flow.start(function() session(self) end)
 end
 
 function final(self)
+	sound.stop "loader:/sound#space"
 	for handle in pairs(self.timers) do
 		timer.cancel(handle)
 	end

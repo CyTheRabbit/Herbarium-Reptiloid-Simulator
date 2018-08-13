@@ -22,6 +22,6 @@ end
 
 function on_input(self, action_id, action)
 	if action_id == hash "replay" then
-		monarch.show(hash "game", { clear = true, reload = true })
+		monarch.show(hash "menu", { clear = true, reload = true })
 	end
 end

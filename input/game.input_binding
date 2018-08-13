@@ -1,6 +1,6 @@
 key_trigger {
   input: KEY_SPACE
-  action: "spawn_ship"
+  action: "fastforward"
 }
 key_trigger {
   input: KEY_ESC

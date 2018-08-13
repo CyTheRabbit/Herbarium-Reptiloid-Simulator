@@ -20,7 +20,7 @@ background_color {
 nodes {
   position {
     x: 1192.0
-    y: 50.0
+    y: 8.0
     z: 0.0
     w: 1.0
   }
@@ -31,8 +31,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 2.0
-    y: 2.0
+    x: 1.0
+    y: 1.0
     z: 1.0
     w: 1.0
   }
@@ -51,7 +51,7 @@ nodes {
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
   text: "0"
-  font: "system_font"
+  font: "normal"
   id: "text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -105,9 +105,9 @@ nodes {
     w: 1.0
   }
   color {
-    x: 0.7411765
-    y: 0.7411765
-    z: 0.7411765
+    x: 0.0
+    y: 0.0
+    z: 0.0
     w: 1.0
   }
   type: TYPE_BOX
@@ -191,7 +191,7 @@ nodes {
 nodes {
   position {
     x: 0.0
-    y: -246.0
+    y: -273.0
     z: 0.0
     w: 1.0
   }
@@ -246,7 +246,7 @@ nodes {
   layer: ""
   inherit_alpha: true
   alpha: 1.0
-  outline_alpha: 1.0
+  outline_alpha: 0.0
   shadow_alpha: 1.0
   template_node_child: false
   text_leading: 1.0

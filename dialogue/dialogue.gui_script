@@ -49,6 +49,6 @@ function on_input(self, action_id, action)
 				gui.set_text(gui.get_node "text", self.text[self.page])
 			end
 			return true
-			end
+		end
 	end
 end
