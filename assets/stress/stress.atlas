@@ -1,33 +1,39 @@
 images {
-  image: "/assets/stress/stress_1.png"
+  image: "/assets/stress/green_stress_0.png"
 }
 images {
-  image: "/assets/stress/stress_2.png"
+  image: "/assets/stress/green_stress_1.png"
 }
 images {
-  image: "/assets/stress/stress_3.png"
+  image: "/assets/stress/green_stress_2.png"
 }
 images {
-  image: "/assets/stress/stress_4.png"
+  image: "/assets/stress/green_stress_3.png"
 }
 images {
-  image: "/assets/stress/stress_5.png"
+  image: "/assets/stress/orange_stress_3.png"
 }
 images {
-  image: "/assets/stress/stress_6.png"
+  image: "/assets/stress/orange_stress_4.png"
 }
 images {
-  image: "/assets/stress/stress_7.png"
+  image: "/assets/stress/orange_stress_5.png"
 }
 images {
-  image: "/assets/stress/stress_8.png"
+  image: "/assets/stress/orange_stress_6.png"
 }
 images {
-  image: "/assets/stress/stress_9.png"
+  image: "/assets/stress/red_stress_6.png"
 }
 images {
-  image: "/assets/stress/stress_10.png"
+  image: "/assets/stress/red_stress_7.png"
 }
-margin: 1
+images {
+  image: "/assets/stress/red_stress_8.png"
+}
+images {
+  image: "/assets/stress/red_stress_9.png"
+}
+margin: 0
 extrude_borders: 0
-inner_padding: 0
+inner_padding: 1

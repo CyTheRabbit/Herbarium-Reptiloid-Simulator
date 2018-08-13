@@ -10,16 +10,6 @@ function init(self)
 	msg.post("#", "update_counter")
 end
 
-function final(self)
-	-- Add finalization code here
-	-- Remove this function if not needed
-end
-
-function update(self, dt)
-	-- Add update code here
-	-- Remove this function if not needed
-end
-
 function on_message(self, message_id, message, sender)
 	local percent = 1 - global.space / global.max_space
 	if global.space == 0 and not self.out then
@@ -47,9 +37,4 @@ function on_input(self, action_id, action)
 	if gui.pick_node(self.bkg, action.x, action.y) then
 		return true
 	end
-end
-
-function on_reload(self)
-	-- Add input-handling code here
-	-- Remove this function if not needed
 end

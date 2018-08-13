@@ -19,6 +19,28 @@ local function say(...)
 	wait.delay(0.25)
 end
 
+local function wave(planet_pool, props, count, parallel_count, delay)
+	flow.parallel(function()
+		for i = 1, parallel_count do
+			wait.delay(delay)
+
+			local planet = planet_pool[math.random(#planet_pool)]
+			send_ship_to(planet, props)
+		end
+	end)
+
+	for i = parallel_count + 1, count do
+		wait.until_message(hash "mission_done", hash "hit")
+
+		local planet = planet_pool[math.random(#planet_pool)]
+		send_ship_to(planet, props)
+	end
+
+	for i = 1, parallel_count do
+		wait.until_message(hash "mission_done", hash "hit")
+	end
+end
+
 local function tutorial()
 	msg.post("game:/tools", "release_input_focus")
 	wait.delay(0.5)
@@ -45,7 +67,7 @@ local function tutorial()
 	end
 	say(reaction,
 	"Теперь это твоя работа.\nБудешь следить за тем, чтобы людишки ничего не подозревали.",
-	"Справа шкала твоего космоса и шкала паники.\nНе допусти, чтобы паника добралась до максимума!")
+	"Справа шкала паники и шкала твоего космоса.\nНе допусти, чтобы паника достигла максимума!")
 end
 
 local function session()
@@ -59,20 +81,38 @@ local function session()
 	end
 
 	local delay = 10.0
-	for i = 1, 7 do
-		flow.delay(delay)
-		if delay > 5 then
-			delay = delay - 0.5
-		end
-		msg.post("game:/port", "spawn_ship")
-	end
+
+	local planet_pool = {
+		msg.url "game:/planet1",
+		msg.url "game:/planet2",
+		msg.url "game:/planet3",
+		msg.url "game:/planet4",
+	}
+
+
+	-- first wave ships
+	wave(planet_pool, nil, 10, 3, 7.5)
+
+	say(
+	"Проклятые человеки! Сперва наслушаются Илонов Масков, а потом пускают всюду свои шатлы.",
+	"Слышал новость? Илон Маск повысил своё КПД до 120%, и теперь шатлы летают в два раза дальше.",
+	"Но не переживай, верхняя ложа решила отсыпать тебе немного космоса, чтобы облегчить задачу.")
+	global.space = global.space + 30
+
 end
 
 function init(self)
+	global.stress = 0
+	global.space = 0
+
+	global.ship_properties.speed = 15
 	self.flow = flow.start(session)
 end
 
 function final(self)
+	for handle in pairs(self.timers) do
+		timer.cancel(handle)
+	end
 	flow.stop(self.flow)
 end
 

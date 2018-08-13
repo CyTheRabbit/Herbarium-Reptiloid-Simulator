@@ -2,7 +2,7 @@ return {
 	space = 30,
 	max_space = 160,
 
-	stress = 1,
+	stress = 0,
 	max_stress = 9,
 
 	ship_properties = {

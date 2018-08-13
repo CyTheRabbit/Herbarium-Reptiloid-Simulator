@@ -17,7 +17,7 @@ local function finish_flight(self)
 	assert_tracer(self)
 
 	if self.is_last_flight then
-		msg.post("game:/manager", "mission_done")
+		msg.post("game:/manager", "mission_done", { alert = self.alert })
 		go.delete(".", true)
 	else
 		msg.post("game:/manager", "flight_done")
