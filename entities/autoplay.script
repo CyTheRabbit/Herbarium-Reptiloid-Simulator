@@ -106,6 +106,8 @@ local function session(self)
 
 	wave(self, planet_pool, nil, 14, 10)
 
+	monarch.show(hash "gameover", nil, { win = true })
+
 end
 
 function init(self)

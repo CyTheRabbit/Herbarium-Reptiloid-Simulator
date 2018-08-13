@@ -16,6 +16,15 @@ images {
 images {
   image: "/assets/gui/Dialog_window.png"
 }
+images {
+  image: "/assets/gui/sad_boy.png"
+}
+images {
+  image: "/assets/gui/Reptiloid_tyan.png"
+}
+images {
+  image: "/assets/gui/mouse.png"
+}
 margin: 0
 extrude_borders: 0
 inner_padding: 0

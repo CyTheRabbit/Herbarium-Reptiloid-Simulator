@@ -9,6 +9,9 @@ end
 function init(self)
 	msg.post("loader:/game#collectionproxy", "set_time_step", {factor = 0, mode = 1})
 
+	local mouse_down = gui.get_position(gui.get_node "mouse").y - 20
+	gui.animate(gui.get_node "mouse", "position.y", mouse_down, gui.EASING_LINEAR, 0.4, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+
 	-- Hiding splash
 	self.splash = gui.get_node "splash"
 	local color = gui.get_color(self.splash)

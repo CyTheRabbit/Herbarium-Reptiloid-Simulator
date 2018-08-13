@@ -9,6 +9,13 @@ end
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
+	local data = monarch.data(hash "gameover")
+
+	if data and data.win then
+		gui.play_flipbook(gui.get_node "bkg", "kek3")
+		gui.set_text(gui.get_node "text", "ТЕБЯ ПОВЫСИЛИ")
+	end
+
 	self.hint = gui.get_node "hint"
 	timer.delay(1, true, splash_hint)
 end

@@ -50,7 +50,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "gui/kek3"
+  texture: "gui/sad_boy"
   id: "bkg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
