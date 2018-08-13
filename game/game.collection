@@ -123,8 +123,68 @@ instances {
   id: "planet5"
   prototype: "/entities/planet/planet.go"
   position {
-    x: 801.0
-    y: 208.0
+    x: 736.0
+    y: 223.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "planet6"
+  prototype: "/entities/planet/planet.go"
+  position {
+    x: 881.0
+    y: 369.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "planet7"
+  prototype: "/entities/planet/planet.go"
+  position {
+    x: 465.0
+    y: 96.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "planet8"
+  prototype: "/entities/planet/planet.go"
+  position {
+    x: 768.0
+    y: 544.0
     z: 0.0
   }
   rotation {
@@ -486,6 +546,9 @@ embedded_instances {
   children: "planet3"
   children: "planet4"
   children: "planet5"
+  children: "planet6"
+  children: "planet7"
+  children: "planet8"
   data: ""
   position {
     x: 0.0
