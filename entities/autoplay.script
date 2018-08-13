@@ -20,7 +20,7 @@ local function say(...)
 end
 
 local function wave(self, planet_pool, props, count, delay)
-	flow.parallel(function()
+	self.parallel = flow.parallel(function()
 		for i = 1, count do
 			wait.delay(delay)
 
@@ -88,7 +88,7 @@ local function session(self)
 
 	say(
 	"Хм, тебя ещё не уволили?\nНаверное, ты хорошо справляешься.",
-	"Ладно, ты слышал новость?\nИлон Маск повысил своё КПД до 120%, и теперь шатлы будут летать в два раза дальше.",
+	"Ладно, ты слышал новость?\nLEGO выпустили конструктор спутников, и теперь шатлы летают в два раза дальше.",
 	"Но не переживай, верхняя ложа решила отсыпать тебе немного космоса, чтобы облегчить задачу.")
 
 	for i = 1, 30 do
@@ -105,6 +105,37 @@ local function session(self)
 	table.insert(planet_pool, msg.url "game:/planet7")
 
 	wave(self, planet_pool, nil, 14, 10)
+
+	say(
+	"Я погляжу, тебе здесь комфортно.",
+	"А ты слышал новости?\n Илон Маск повысил свой КПД до 120%, и теперь шатлы будут летать в полтора раза быстрее.",
+	"Поэтому начальство распорядило тебе ещё немного космоса.")
+
+	for i = 1, 20 do
+		global.max_space = global.max_space + 1
+		global.space = global.space + 1
+		msg.post("game:/manager", "update_counter")
+		wait.delay(0.0625)
+	end
+
+	wave(self, planet_pool, { speed = 15 }, 8, 10)
+
+	say(
+	"Когда эти людишки наконец угомонятся?",
+	"Но я не поэтому.\nРПЦ заявила, что бог находится на краю галактики, и теперь шатлы будут летать до самых далёких планет.",
+	"И да, директор РенТВ просил выдать тебе ещё немного космоса.")
+
+	table.insert(planet_pool, "game:/planet8")
+	table.insert(planet_pool, "game:/planet")
+
+	for i = 1, 50 do
+		global.max_space = global.max_space + 1
+		global.space = global.space + 1
+		msg.post("game:/manager", "update_counter")
+		wait.delay(0.0625)
+	end
+
+	wave(self, planet_pool, { speed = 15 }, 8, 10)
 
 	monarch.show(hash "gameover", nil, { win = true })
 
@@ -124,6 +155,7 @@ function final(self)
 	for handle in pairs(self.timers) do
 		timer.cancel(handle)
 	end
+	flow.stop(self.parallel)
 	flow.stop(self.flow)
 end
 
