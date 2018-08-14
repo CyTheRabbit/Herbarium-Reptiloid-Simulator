@@ -1,4 +1,5 @@
 local monarch = require "monarch.monarch"
+local lang = require "lang"
 
 local function splash_hint(self)
 	local color = gui.get_color(self.hint)
@@ -13,7 +14,10 @@ function init(self)
 
 	if data and data.win then
 		gui.play_flipbook(gui.get_node "bkg", "kek3")
-		gui.set_text(gui.get_node "text", "ТЕБЯ ПОВЫСИЛИ")
+	end
+	local lang_list = data and data.win and lang.gameover.win or lang.gameover.loose
+	for nodename, text in pairs(lang_list[lang.current()]) do
+		gui.set_text(gui.get_node(nodename), text)
 	end
 
 	self.hint = gui.get_node "hint"

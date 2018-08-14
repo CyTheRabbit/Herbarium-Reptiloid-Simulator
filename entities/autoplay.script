@@ -2,6 +2,7 @@ local flow = require "m.flow"
 local wait = flow
 local monarch = require "monarch.monarch"
 local global = require "global"
+local lang = require "lang"
 
 local hash = hash
 
@@ -14,8 +15,8 @@ local function send_ship_to(url, props)
 	send_ship_at(go.get_world_position(url), props)
 end
 
-local function say(...)
-	monarch.show(hash "dialogue", nil, { text = { ... }, time = time })
+local function say(text)
+	monarch.show(hash "dialogue", nil, { text = text, time = time })
 	wait.delay(0.25)
 end
 
@@ -34,6 +35,15 @@ local function wave(self, planet_pool, props, count, delay)
 	end
 end
 
+local function pour_off(self, count)
+	for i = 1, count do
+		global.max_space = global.max_space + 1
+		global.space = global.space + 1
+		msg.post("game:/manager", "update_counter")
+		wait.delay(0.0625)
+	end
+end
+
 local function tutorial(self)
 	msg.post("game:/tools", "release_input_focus")
 	wait.delay(0.5)
@@ -41,10 +51,8 @@ local function tutorial(self)
 	send_ship_to(msg.url "game:/planet1", { speed = 15 })
 
 	wait.delay(3)
-	say(
-	"Людишки начали посылать свои жалкие шатлы на другие планеты.",
-	"Они могут узнать, что космос не бесконечный!\nНельзя этого допустить!",
-	"Ты! Живо сделай что-нибудь!\n\nВозьми космос вон там и положи его перед шатлом, чтобы он не столкнулся с краем бездны!")
+	print(sys.get_sys_info().device_language)
+	say(lang.tutorial.call_to_action[lang.current()])
 
 	msg.post("game:/tools", "acquire_input_focus")
 
@@ -53,14 +61,11 @@ local function tutorial(self)
 	local reaction
 	if message_id == hash "flight_done" then
 		wait.delay(1)
-		reaction = "Фух, они не увидели...\nКак бы на нас смотрели илюминаты если бы мы не справились?"
+		say(lang.tutorial.good_reaction[lang.current()])
 	elseif message_id == hash "hit" then
 		wait.delay(0.25)
-		reaction = "Проклятье! Шатл взорвался!\nЧто о нас теперь подумают иллюминаты?"
+		say(lang.tutorial.bad_reaction[lang.current()])
 	end
-	say(reaction,
-	"Теперь это твоя работа.\nБудешь следить за тем, чтобы людишки ничего не подозревали.",
-	"Справа шкала паники и шкала твоего космоса.\nНе допусти, чтобы паника достигла максимума!")
 end
 
 local function session(self)
@@ -80,61 +85,33 @@ local function session(self)
 		msg.url "game:/planet5",
 	}
 
-	wave(self, planet_pool, nil, 10, 8)
+	wave(self, planet_pool, nil, 6, 8)
 
 	if do_tutorial then
 		wait.until_message(hash "mission_done", hash "hit")
 	end
 
-	say(
-	"Хм, тебя ещё не уволили?\nНаверное, ты хорошо справляешься.",
-	"Ладно, ты слышал новость?\nLEGO выпустили конструктор спутников, и теперь шатлы летают в два раза дальше.",
-	"Но не переживай, верхняя ложа решила отсыпать тебе немного космоса, чтобы облегчить задачу.")
+	say(lang.wave_1_end[lang.current()])
+	pour_off(self, 30)
 
-	for i = 1, 30 do
-		global.max_space = global.max_space + 1
-		global.space = global.space + 1
-		msg.post("game:/manager", "update_counter")
-		wait.delay(0.0625)
-	end
-
-	say("Ах, да!\nТы ведь знаешь, что человеки успокаиваются, когда на землю возвращается шатл с синим радаром?")
+	say(lang.radar_hint[lang.current()])
 
 	table.insert(planet_pool, msg.url "game:/planet1")
 	table.insert(planet_pool, msg.url "game:/planet6")
 	table.insert(planet_pool, msg.url "game:/planet7")
 
-	wave(self, planet_pool, nil, 14, 10)
+	wave(self, planet_pool, nil, 10, 10)
 
-	say(
-	"Я погляжу, тебе здесь комфортно.",
-	"А ты слышал новости?\n Илон Маск повысил свой КПД до 120%, и теперь шатлы будут летать в полтора раза быстрее.",
-	"Поэтому начальство распорядило тебе ещё немного космоса.")
+	say(lang.wave_2_end[lang.current()])
+	pour_off(self, 20)
 
-	for i = 1, 20 do
-		global.max_space = global.max_space + 1
-		global.space = global.space + 1
-		msg.post("game:/manager", "update_counter")
-		wait.delay(0.0625)
-	end
+	wave(self, planet_pool, { speed = 30 }, 8, 7)
 
-	wave(self, planet_pool, { speed = 30 }, 8, 8)
-
-	say(
-	"Когда эти людишки наконец угомонятся?",
-	"Но я не поэтому.\nРПЦ заявила, что бог находится на краю галактики, и теперь шатлы будут летать до самых далёких планет.",
-	"И да, директор РенТВ просил выдать тебе ещё немного космоса.")
+	say(lang.wave_3_end[lang.current()])
+	pour_off(self, 50)
 
 	table.insert(planet_pool, "game:/planet8")
 	table.insert(planet_pool, "game:/planet")
-
-	for i = 1, 50 do
-		global.max_space = global.max_space + 1
-		global.space = global.space + 1
-		msg.post("game:/manager", "update_counter")
-		wait.delay(0.0625)
-	end
-
 	wave(self, planet_pool, { speed = 30 }, 8, 8)
 
 	monarch.show(hash "gameover", nil, { win = true })

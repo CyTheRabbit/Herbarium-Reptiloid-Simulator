@@ -1,6 +1,11 @@
 local monarch = require "monarch.monarch"
+local lang = require "lang"
 
 function init(self)
+	for nodename, text in pairs(lang.menu[lang.current()]) do
+		gui.set_text(gui.get_node(nodename), text)
+	end
+
 	self.buttons = {
 		new_game = {
 			node = gui.get_node "new_game",
