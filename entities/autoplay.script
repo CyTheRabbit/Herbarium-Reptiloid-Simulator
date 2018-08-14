@@ -3,6 +3,8 @@ local wait = flow
 local monarch = require "monarch.monarch"
 local global = require "global"
 local lang = require "lang"
+local clone = require "m.clone"
+local util = require "m.util"
 
 local hash = hash
 
@@ -17,16 +19,23 @@ end
 
 local function say(text)
 	monarch.show(hash "dialogue", nil, { text = text, time = time })
-	wait.delay(0.25)
+	wait.until_message(monarch.FOCUS.GAINED)
 end
 
 local function wave(self, planet_pool, props, count, delay)
 	self.parallel = flow.parallel(function()
-		for i = 1, count do
-			wait.delay(delay)
+		local targets = clone(planet_pool)
+		while #targets < count do
+			local planet = util.random(planet_pool)
+			table.insert(targets, 1, planet)
+		end
 
-			local planet = planet_pool[math.random(#planet_pool)]
-			send_ship_to(planet, props)
+		util.shuffle(targets)
+
+		wait.delay(delay/3)
+		for i = 1, count do
+			send_ship_to(targets[i], props)
+			wait.delay(delay)
 		end
 	end)
 
@@ -44,6 +53,14 @@ local function pour_off(self, count)
 	end
 end
 
+local function add_destinations(planet_pool, ...)
+	local urls = { ... }
+	for _, url in pairs(urls) do
+--		local pos = go.get_world_position(url)
+		table.insert(planet_pool, url)
+	end
+end
+
 local function tutorial(self)
 	msg.post("game:/tools", "release_input_focus")
 	wait.delay(0.5)
@@ -51,20 +68,20 @@ local function tutorial(self)
 	send_ship_to(msg.url "game:/planet1", { speed = 15 })
 
 	wait.delay(3)
-	print(sys.get_sys_info().device_language)
 	say(lang.tutorial.call_to_action[lang.current()])
 
 	msg.post("game:/tools", "acquire_input_focus")
 
 	local message_id = flow.until_message(hash "flight_done", hash "hit")
 
-	local reaction
 	if message_id == hash "flight_done" then
 		wait.delay(1)
 		say(lang.tutorial.good_reaction[lang.current()])
+		return true
 	elseif message_id == hash "hit" then
 		wait.delay(0.25)
 		say(lang.tutorial.bad_reaction[lang.current()])
+		return false
 	end
 end
 
@@ -73,21 +90,19 @@ local function session(self)
 
 	local data = monarch.data(hash "game")
 	local do_tutorial = data and data.tutorial
+	local wait_tutorial_ship
 
 	if do_tutorial then
-		tutorial(self)
+		wait_tutorial_ship = tutorial(self)
 	end
 
-	local planet_pool = {
-		msg.url "game:/planet2",
-		msg.url "game:/planet3",
-		msg.url "game:/planet4",
-		msg.url "game:/planet5",
-	}
+	local planet_pool = {}
+	add_destinations(planet_pool, "/planet2", "/planet3", "/planet4", "/planet5")
 
 	wave(self, planet_pool, nil, 6, 8)
 
-	if do_tutorial then
+
+	if wait_tutorial_ship then
 		wait.until_message(hash "mission_done", hash "hit")
 	end
 
@@ -96,9 +111,7 @@ local function session(self)
 
 	say(lang.radar_hint[lang.current()])
 
-	table.insert(planet_pool, msg.url "game:/planet1")
-	table.insert(planet_pool, msg.url "game:/planet6")
-	table.insert(planet_pool, msg.url "game:/planet7")
+	add_destinations(planet_pool, "planet1", "planet6", "planet7")
 
 	wave(self, planet_pool, nil, 10, 10)
 
@@ -110,9 +123,9 @@ local function session(self)
 	say(lang.wave_3_end[lang.current()])
 	pour_off(self, 50)
 
-	table.insert(planet_pool, "game:/planet8")
-	table.insert(planet_pool, "game:/planet")
 	wave(self, planet_pool, { speed = 30 }, 8, 8)
+	add_destinations(planet_pool, "planet8", "planet")
+
 
 	monarch.show(hash "gameover", nil, { win = true })
 
@@ -124,6 +137,7 @@ function init(self)
 
 	global.stress = 0
 	global.space = 0
+	global.max_space = 110
 
 	global.ship_properties.speed = 15
 	self.flow = flow.start(function() session(self) end)
